@@ -1,0 +1,33 @@
+TemporalMonkey is hosted in GCP as a VM.
+
+To access TemporalMonkey's instance:
+1. Login to GCP
+2. Go to TemporalMonkey project (fluted-helper-393022)
+3. Go to Google Compute Engine > VM instances
+4. Click temporal-monkey
+5. SSH to open a terminal interface
+
+To update TemporalMonkey:
+1. cd to its folder
+2. Upload new versions of all modified files
+3. mv <filename> <destination> to put them in the right folder
+4. screen -R to return to running screen
+5. ctrl+c to stop TemporalMonkey
+6. start TemporalMonkey
+7. ctrl+a, then d to detach from screen
+8. you can use "exit" in the screen to close it
+
+To backup TemporalMonkey:
+1. cd to its folder
+2. tar the folder
+3. download the tar
+
+To install pyenv:
+1. https://realpython.com/intro-to-pyenv/#installing-pyenv
+2. curl https://pyenv.run | bash
+3. pyenv install 3.12.7
+4. cd to TemporalMonkey folder
+5. pyenv local 3.12.7
+
+
+

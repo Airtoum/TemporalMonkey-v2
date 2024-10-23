@@ -1,0 +1,561 @@
+VERB
+NAME: walk
+TENSES: walk, walks, walking, walked, will walk
+WHEN SOMETHING walk OTHER:
+  BRING SELF TOWARDS OTHER
+  | This verb lets you walk towards something
+  | when you type ^wc walk <object>
+  | If you just want to walk a direction,
+  | Try doing ^wc walk North.
+  | There is an object named North infinitely far away
+  | for you to walk towards.
+  | See also: run, sprint
+
+VERB
+NAME: run
+TENSES: run, runs, running, ran, will run
+WHEN SOMETHING run OTHER:
+  BRING SELF TOWARDS OTHER
+  BRING SELF TOWARDS OTHER
+  BRING SELF TOWARDS OTHER
+
+VERB
+NAME: sprint
+TENSES: sprint, sprints, sprinting, sprinted, will sprint
+WHEN SOMETHING sprint OTHER:
+  BRING SELF TOWARDS OTHER
+  BRING SELF TOWARDS OTHER
+  BRING SELF TOWARDS OTHER
+  BRING SELF TOWARDS OTHER
+  BRING SELF TOWARDS OTHER
+
+OBJECT
+NAME: North
+INVENTORY: NOTHING
+ACTIONS: NOTHING
+INTERACTION RADIUS: Infinity
+INITIALIZE:
+  FIND ALL THAT ARE A North
+  FIND ALL FROM THESE THAT ARE NOT ME
+  IF THESE EXIST
+  OUTPUT There can only be one MYSELF! AND DESTROY THESE
+  GO TO 0 INFINITY 0
+
+OBJECT
+NAME: South
+INVENTORY: NOTHING
+ACTIONS: NOTHING
+INTERACTION RADIUS: Infinity
+INITIALIZE:
+  FIND ALL THAT ARE A South
+  FIND ALL FROM THESE THAT ARE NOT ME
+  IF THESE EXIST
+  OUTPUT There can only be one MYSELF! AND DESTROY THESE
+  GO TO 0 -INFINITY 0
+
+OBJECT
+NAME: East
+INVENTORY: NOTHING
+ACTIONS: NOTHING
+INTERACTION RADIUS: Infinity
+INITIALIZE:
+  FIND ALL THAT ARE A East
+  FIND ALL FROM THESE THAT ARE NOT ME
+  IF THESE EXIST
+  OUTPUT There can only be one MYSELF! AND DESTROY THESE
+  GO TO INFINITY 0 0
+
+OBJECT
+NAME: West
+INVENTORY: NOTHING
+ACTIONS: NOTHING
+INTERACTION RADIUS: Infinity
+INITIALIZE:
+  FIND ALL THAT ARE A West
+  FIND ALL FROM THESE THAT ARE NOT ME
+  IF THESE EXIST
+  OUTPUT There can only be one MYSELF! AND DESTROY THESE
+  GO TO -INFINITY 0 0
+
+OBJECT
+NAME: Up
+INVENTORY: NOTHING
+ACTIONS: NOTHING
+INTERACTION RADIUS: Infinity
+INITIALIZE:
+  FIND ALL THAT ARE A Up
+  FIND ALL FROM THESE THAT ARE NOT ME
+  IF THESE EXIST
+  OUTPUT There can only be one MYSELF! AND DESTROY THESE
+  GO TO 0 0 Infinity
+WHEN OTHER walk IT:
+  OUTPUT OTHER cannot walk IT!
+  STOP
+
+OBJECT
+NAME: Down
+INVENTORY: NOTHING
+ACTIONS: NOTHING
+INTERACTION RADIUS: Infinity
+INITIALIZE:
+  FIND ALL THAT ARE A Down
+  FIND ALL FROM THESE THAT ARE NOT ME
+  IF THESE EXIST
+  OUTPUT There can only be one MYSELF! AND DESTROY THESE
+  GO TO 0 0 -Infinity
+WHEN OTHER walk IT:
+  OUTPUT OTHER cannot walk IT!
+  STOP
+
+VERB
+NAME: die
+TENSES: die, dies, dying, died, will die
+WHEN MYSELF die:
+  DESTROY MYSELF
+
+OBJECT
+NAME: Wall
+ACTIONS: NOTHING
+INTERACTION RADIUS: 9
+BEFORE MOVED INTO:
+  OUTPUT OTHER tried to move into a MYSELF!
+  STOP
+
+PLACE North AT 0 0 0
+PLACE South AT 0 0 0
+PLACE East AT 0 0 0
+PLACE West AT 0 0 0
+PLACE Up AT 0 0 0
+PLACE Down AT 0 0 0
+
+OBJECT
+NAME: Sign
+INVENTORY: Use `^wc read Sign` to read it!
+INTERACTION RADIUS: 8
+WHEN OTHER read IT:
+  OUTPUT TO OTHER Welcome to Wacky Codex! Take a look at my definition: Use `^wc-lookup Sign`
+  | 
+  | - . * Hey, welcome to the sign's definition! :D . * -
+  | Wacky Codex uses definitions to control what objects in the world are and do
+  | and what what verbs mean. You can create your own definitions with ^wc-define!
+  | (Lines that begin with a vertical bar in a script do nothing.)
+  | 
+BEFORE MOVED INTO:
+  OUTPUT OTHER tried to move into a MYSELF!
+  STOP
+  | This stops the entire execution of an action,
+  | so the movement will not go through. This makes the sign solid!
+  | Speaking of movement, you should lookup `walk`.
+
+PLACE Sign AT 0 1 0
+
+VERB
+NAME: read
+TENSES: read, reads, reading, read, will read
+WHEN SOMEONE read OTHER:
+  NOOP
+  | A no-op stands for "No-Operation". 
+  | It means this verb does nothing by default, but
+  | other objects can react to this verb with special
+  | hooks, like `WHEN OTHER read MYSELF:`
+
+VERB
+NAME: eat-cookie
+TENSES: eat-cookie, eat-cookies, eat-cookying, eat-cookied, will eat-cookie
+WHEN SOMEONE eat-cookie:
+  IF MYSELF NOT HAS Cookie
+  OUTPUT SOMEONE cannot eat-cookie, since they have no Cookie to eat-cookie.
+  IF MYSELF HAS Cookie
+  MUTE AND REMOVE Cookie FROM MYSELF AND UNMUTE AND OUTPUT MYSELF eat-cookied! It was tasty.
+
+VERB
+NAME: press
+TENSES: press, presses, pressing, pressed, will press
+WHEN SOMEONE press OTHER:
+  IF OTHER NOT HAVE Pressable
+  STOP AND OUTPUT OTHER cannot be pressed since it doesn't have Pressable.
+  IF OTHER HAVE Deactivated
+  REMOVE Deactivated FROM OTHER AND GIVE Activated TO OTHER AND TELL OTHER TO activate AND GIVE Done TO OTHER
+  IF OTHER HAVE Activated AND IF OTHER NOT HAVE Done
+  REMOVE Activated FROM OTHER AND GIVE Deactivated TO OTHER
+  REMOVE Done FROM OTHER
+  | Here, the item Done is being used to control
+  | whether the other object has already been processed.
+  | If the press activates it, we wouldn't want 
+  | to deactivate it from later in the same press.
+  | 
+  | More than one IF on a line joined by AND
+  | technically works as a logical AND.
+  | If an IF condition is satisfied, the next line
+  | will be marked to be skipped. 
+  | If it is failed, the IF does nothing.
+  | Marking the next line as skipped twice is
+  | exactly like marking it as skipped once.
+
+VERB
+NAME: activate
+TENSES: activate, activates, activating, activated, will activate
+WHEN SOMEONE activate:
+  NOOP
+
+VERB
+NAME: transmit
+TENSES: transmit, transmits, transmitting, transmitted, will transmit
+WHEN SOMEONE transmit:
+  FIND ALL THAT HAVE Recieving
+  FIND ALL FROM THESE THAT ARE NOT ME
+  FIND ALL FROM THESE THAT NOT HAS Recieved
+  GIVE Recieved TO THESE
+  TELL THESE TO activate AND REMOVE Recieved FROM THESE
+  | FIND ALL selects multiple objects, 
+  | and assigns them to THESE instead of THIS.
+  | Almost all commands accept THESE as well as THIS
+  | in their syntax.
+  | You can use the FROM <group> syntax to only search
+  | for objects in a group rather than all objects that
+  | are availible.
+
+OBJECT
+NAME: Button
+INVENTORY: Pressable, Deactivated
+INTERACTION RADIUS: 2
+WHEN OTHER press IT:
+  OUTPUT The MYSELF makes a pleasant sound as it is pressed.
+  | The logic for the behaviour is actually controlled by "press"!
+WHEN IT activate:
+  DO transmit
+
+VERB
+NAME: light-up
+TENSES: light-up, lights-up, lighting-up, lit-up, will light-up
+WHEN SOMEONE light-up:
+  NOOP
+  | NOOP does nothing. This verb is was made for flavor.
+  | Of course, objects could still respond specifically to this verb.
+
+OBJECT
+NAME: Button Pedestal
+INTERACTION RADIUS: 15
+INITIALIZE:
+  CREATE Button
+BEFORE MOVED OUT OF:
+  IF OTHER IS MYSELF
+  OUTPUT MYSELF is immovable. AND STOP
+BEFORE OTHER press IT:
+  FIND NEAREST THAT IS A Button
+  | The FIND command searches for objects,
+  | and assigns them to the THIS keyword.
+  OUTPUT TO OTHER The MYSELF cannot be pressed. You must get close and press its THIS.
+  TELL THIS TO light-up
+  | The TELL command makes another object do a verb.
+  STOP
+
+VERB
+NAME: ask-for-cookie
+TENSES: ask-for-cookie, ask-for-cookies, ask-for-cookying, ask-for-cookied, will ask-for-cookie
+WHEN SOMEONE ask-for-cookie:
+  NOOP
+  | A no-op stands for "No-Operation". 
+  | It means this verb does nothing by default, but
+  | other objects can react to this verb with special
+  | hooks, like `WHEN OTHER ask-for-cookie ME:`
+
+OBJECT
+NAME: Cookie Guy
+INVENTORY: Infinite cookies
+INTERACTION RADIUS: 7
+BEFORE HE eat-cookie:
+  GIVE Cookie TO HIM
+WHEN OTHER ask-for-cookie HIM:
+  IF OTHER HAS Cookie
+  OUTPUT TO OTHER "You already have a Cookie! I'm not going to give you one until you eat that one with ^wc eat-cookie."\n(Lookup verbs with `^wc-lookup <verb>`)
+  IF OTHER NOT HAS Cookie
+  GIVE Cookie TO OTHER AND OUTPUT TO OTHER "Here is your cookie, OTHER!" he says, "I have lots."
+  |
+  | When you talk to Cookie Guy, you get a cookie in your inventory! 
+  | The cookie doesn't do anything on its own.
+  | An object's inventory is just a list of words describing them and things they have.
+  | You'll see descriptive words, abstract concepts, 
+  | and physical items appear in inventories.
+  | The game treats them the same.
+
+
+PLACE Cookie Guy AT 2 3 0
+PLACE Button Pedestal AT 0 5 0
+
+OBJECT
+NAME: Relay
+INVENTORY: Recieving
+INTERACTION RADIUS: 15
+WHEN IT activate:
+  DO transmit
+
+VERB
+NAME: dissipate
+TENSES: dissipate, dissipates, dissipating, dissipated, will dissipate
+WHEN SOMETHING dissipate:
+  MUTE
+  DESTROY IT
+  UNMUTE
+
+OBJECT
+NAME: Light Tower Light
+INVENTORY: Red
+ACTIONS: dissipate
+INTERACTION RADIUS: 200
+
+OBJECT
+NAME: Light Tower
+INVENTORY: Recieving
+INTERACTION RADIUS: 15
+WHEN IT activate:
+  CREATE Light Tower Light
+
+PLACE Relay AT 0 15 0
+PLACE Relay AT 0 25 0
+PLACE Relay AT 0 35 0
+PLACE Relay AT 0 45 0
+PLACE Relay AT 0 55 0
+PLACE Relay AT 0 65 0
+PLACE Light Tower AT 0 75 0
+
+
+VERB
+NAME: open
+TENSES: open, opens, opening, opened, will open
+WHEN SOMEONE open OTHER:
+  IF OTHER NOT HAS Closed
+  OUTPUT SOMEONE cannot open OTHER because it is not closed. AND IF FALSE
+  REMOVE Closed FROM OTHER AND GIVE Open TO OTHER
+
+VERB
+NAME: close
+TENSES: close, closes, closing, closed, will close
+WHEN SOMEONE close OTHER:
+  IF OTHER NOT HAS Open
+  OUTPUT SOMEONE cannot close OTHER because it is not open. AND STOP
+  REMOVE Open FROM OTHER
+  GIVE Closed TO OTHER
+
+OBJECT
+NAME: Door
+INVENTORY: Closed
+INTERACTION RADIUS: 7
+BEFORE MOVED INTO:
+  IF MYSELF HAS Closed
+  OUTPUT MYSELF is closed. AND STOP
+
+VERB
+NAME: pick-up
+TENSES: pick-up, picks-up, picking-up, picked-up, will pick-up
+WHEN SOMEONE pick-up OTHER:
+  NOOP
+
+VERB
+NAME: inspect
+TENSES: inspect, inspects, inspecting, inspected, will inspect
+WHEN SOMEONE inspect OTHER:
+  NOOP
+
+OBJECT
+NAME: Gold
+INVENTORY: Small, Round
+WHEN OTHER pick-up IT:
+  GIVE Gold TO OTHER
+  MUTE AND DESTROY ITSELF AND UNMUTE
+
+OBJECT
+NAME: Flamethrower
+INVENTORY: Awesome
+WHEN OTHER pick-up IT:
+  GIVE Flamethrower TO OTHER
+  MUTE AND DESTROY ITSELF AND UNMUTE
+WHEN OTHER inspect IT:
+  OUTPUT TO OTHER You can burn things if you *picked-up* it.
+
+OBJECT
+NAME: Fire Chest
+INVENTORY: Closed
+INTERACTION RADIUS: 5
+WHEN OTHER open IT:
+  IF IT HAVE Empty
+  OUTPUT IT is empty! AND STOP
+  CREATE Gold
+  CREATE Gold
+  CREATE Gold
+  CREATE Gold
+  CREATE Flamethrower
+  GIVE Empty TO IT
+
+VERB
+NAME: burn
+TENSES: burn, burns, burning, burned, will burn
+WHEN SOMEONE burn OTHER:
+  IF THEY NOT HAVE Flamethrower
+  OUTPUT A Flamethrower is required to burn OTHER! AND STOP
+  OUTPUT OTHER is scorched ablaze!
+  TELL OTHER TO die
+
+VERB
+NAME: take-damage
+TENSES: take-damage, takes-damage, taking-damage, took-damage, will take-damage
+WHEN SOMEONE take-damage:
+  IF THEY NOT HAVE Health Point
+  TELL THEM TO die
+  IF THEY HAVE Health Point AND IF THEY EXIST
+  REMOVE Health Point FROM THEM
+  IF THEY NOT HAVE Health Point AND IF THEY EXIST
+  TELL THEM TO die
+
+VERB
+NAME: attack
+TENSES: attack, attacks, attacking, attacked, will attack
+WHEN SOMEONE attack OTHER:
+  CONTROL OTHER TO take-damage
+
+VERB
+NAME: goblin-think
+TENSES: goblin-think, goblin-thinks, goblin-thinking, goblin-thought, will goblin-think
+WHEN SOMEONE goblin-think:
+  FIND SOMETHING THAT HAS Upset the Goblin
+  IF THIS EXISTS AND IF THIS IS NOT MYSELF
+  GIVE Made up mind TO MYSELF AND DO attack TO THIS
+  FIND SOMETHING THAT HAS Closed
+  IF THIS EXISTS AND IF MYSELF NOT HAS Made up mind
+  GIVE Made up mind TO MYSELF AND DO run TO THIS AND UNSTOP AND DO open TO THIS
+  FIND SOMETHING
+  IF THIS EXISTS AND IF MYSELF NOT HAS Made up mind AND IF MAYBE
+  DO walk TO THIS
+  FIND FARTHEST
+  IF THIS EXISTS AND IF MYSELF NOT HAS Made up mind
+  DO walk TO THIS
+  MUTE
+  REMOVE Made up mind FROM MYSELF
+  UNMUTE
+
+OBJECT
+NAME: Goblin
+INVENTORY: Small, Nimble, Green, Health Point, Health Point, Health Point
+ACTIONS: goblin-think, goblin-think, goblin-think, attack SOMETHING
+AI: RANDOM
+WHEN IT die:
+  CREATE Gold
+  CREATE Gold
+  CREATE Gold
+WHEN OTHER attack IT:
+  GIVE Upset the Goblin TO OTHER
+  OUTPUT MYSELF dropped **Gold** when it was *attacked*!
+  MUTE
+  CREATE Gold
+  UNMUTE
+
+
+
+PLACE Wall AT 7 6 0
+PLACE Wall AT 7 7 0
+PLACE Wall AT 7 8 0
+PLACE Door AT 7 9 0
+PLACE Wall AT 7 10 0
+PLACE Wall AT 7 11 0
+
+PLACE Wall AT 8 6 0
+PLACE Wall AT 8 11 0
+
+PLACE Wall AT 9 6 0
+PLACE Wall AT 9 11 0
+
+PLACE Wall AT 10 6 0
+PLACE Wall AT 10 11 0
+
+PLACE Wall AT 11 6 0
+PLACE Wall AT 11 11 0
+
+PLACE Wall AT 12 6 0
+PLACE Wall AT 12 11 0
+
+PLACE Wall AT 13 6 0
+PLACE Wall AT 13 11 0
+
+PLACE Wall AT 14 6 0
+PLACE Wall AT 14 11 0
+
+PLACE Wall AT 15 6 0
+PLACE Wall AT 15 11 0
+
+PLACE Wall AT 16 6 0
+PLACE Wall AT 16 11 0
+
+PLACE Wall AT 17 6 0
+PLACE Wall AT 17 7 0
+PLACE Door AT 17 8 0
+PLACE Wall AT 17 9 0
+PLACE Wall AT 17 10 0
+PLACE Wall AT 17 11 0
+PLACE Wall AT 17 12 0
+PLACE Wall AT 17 13 0
+PLACE Wall AT 17 14 0
+PLACE Wall AT 17 15 0
+PLACE Wall AT 17 16 0
+PLACE Wall AT 17 17 0
+PLACE Wall AT 17 18 0
+
+PLACE Wall AT 18 7 0
+PLACE Wall AT 18 12 0
+PLACE Wall AT 18 18 0
+
+PLACE Wall AT 19 7 0
+PLACE Door AT 19 12 0
+PLACE Wall AT 19 18 0
+
+PLACE Wall AT 20 7 0
+PLACE Wall AT 20 12 0
+PLACE Wall AT 20 18 0
+
+PLACE Wall AT 21 7 0
+PLACE Wall AT 21 12 0
+PLACE Wall AT 21 18 0
+
+PLACE Wall AT 22 7 0
+PLACE Wall AT 22 12 0
+PLACE Wall AT 22 18 0
+
+PLACE Wall AT 23 7 0
+PLACE Wall AT 23 8 0
+PLACE Wall AT 23 9 0
+PLACE Wall AT 23 10 0
+PLACE Wall AT 23 11 0
+PLACE Wall AT 23 12 0
+PLACE Wall AT 23 13 0
+PLACE Wall AT 23 14 0
+PLACE Wall AT 23 15 0
+PLACE Wall AT 23 16 0
+PLACE Wall AT 23 17 0
+PLACE Wall AT 23 18 0
+
+PLACE Wall AT 18 15 0
+PLACE Wall AT 19 15 0
+PLACE Wall AT 20 15 0
+PLACE Door AT 21 15 0
+PLACE Wall AT 22 15 0
+
+PLACE Goblin AT 20 17 0
+
+PLACE Fire Chest AT 19 19 0
+
+OBJECT
+NAME: Button Sign
+INVENTORY: Readable
+WHEN OTHER read IT:
+  OUTPUT TO OTHER "There's a large tower way off in the distance! It's too far away for you to see, but if you press this button it will emit a light that's bright enough to see from 200 units away!"
+
+PLACE Button Sign AT -1 5 0
+
+OBJECT
+NAME: Haunted Door
+INVENTORY: Closed
+AI: RANDOM
+ACTIONS: open Haunted Door, close Haunted Door
+INTERACTION RADIUS: 9
+
+PLACE Haunted Door AT 7 4 0
+

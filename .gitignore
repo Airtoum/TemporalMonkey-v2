@@ -1,0 +1,21 @@
+# sensitive data
+*.json
+
+# persisted data
+*.monkey
+keystrings.txt
+savedcountdown.txt
+personalizedstrings.txt
+savedcounter.txt
+
+# assets
+*.mp3
+*.kra
+*.png
+corncob_lowercase.txt
+
+# cache
+__pycache__
+
+# editor
+.vscode
