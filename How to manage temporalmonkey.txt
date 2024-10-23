@@ -8,14 +8,16 @@ To access TemporalMonkey's instance:
 5. SSH to open a terminal interface
 
 To update TemporalMonkey:
-1. cd to its folder
-2. Upload new versions of all modified files
-3. mv <filename> <destination> to put them in the right folder
-4. screen -R to return to running screen
-5. ctrl+c to stop TemporalMonkey
-6. start TemporalMonkey
-7. ctrl+a, then d to detach from screen
-8. you can use "exit" in the screen to close it
+1. git push to the repository from editing machine
+2. cd to its folder
+3. git pull
+
+To turn on or off TemporalMonkey:
+1. screen -R to return to running screen
+2. ctrl+c to stop TemporalMonkey
+3. start TemporalMonkey
+4. ctrl+a, then d to detach from screen
+5. you can use "exit" in the screen to close it
 
 To backup TemporalMonkey:
 1. cd to its folder
@@ -28,6 +30,11 @@ To install pyenv:
 3. pyenv install 3.12.7
 4. cd to TemporalMonkey folder
 5. pyenv local 3.12.7
+
+To setup pyenv:
+1. export PYENV_ROOT="$HOME/.pyenv"
+2. [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+3. eval "$(pyenv init -)" >> ~/.bashrc
 
 
 
