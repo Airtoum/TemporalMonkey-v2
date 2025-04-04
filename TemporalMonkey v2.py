@@ -701,7 +701,7 @@ class Commands:
             alldecks = {}
         if len(alldecks.keys()) == 0:
             await channel.send("There are no decks.")
-        await multisend("\n".join(alldecks.keys()), enclose='```')
+        await multisend(channel, "\n".join(alldecks.keys()), enclose='```')
 
     flipcoin_short_desc = f"Flips a coin. 50% chance of heads, 50% chance of tails."
     async def flipcoin(self, args, author: discord.User, channel, monkey: Monkey, commandlist, extra):
