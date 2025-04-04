@@ -1349,6 +1349,8 @@ async def on_message(message: discord.Message):
         prefix + "rolldeck": commands.rolldeck,
         prefix + "roll": commands.rolldeck,
         prefix + "listdecks": commands.listdecks,
+        prefix + "spreaddeck": commands.spreaddeck,
+        prefix + "spread": commands.spreaddeck,
         prefix + "flipcoin": commands.flipcoin,
         prefix + "embed_test": commands.embed_test,
         prefix + "wc-start": commands.wacky_codex_create_player,
