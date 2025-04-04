@@ -702,6 +702,22 @@ class Commands:
         if len(alldecks.keys()) == 0:
             await channel.send("There are no decks.")
         await multisend(channel, "\n".join(alldecks.keys()), enclose='```')
+    
+    spreaddeck_short_desc = "Lists all cards in a deck."
+    async def spreaddeck(self, args, author: discord.User, channel, monkey: Monkey, commandlist, extra):
+        try:
+            with open('saveddecks.monkey', 'rb') as thefile:
+                alldecks = pickle.load(thefile)
+        except FileNotFoundError:
+            alldecks = {}
+        deck = args[0]
+        if not deck in alldecks:
+            await channel.send("That deck has not been created.")
+            return
+        if len(alldecks[deck]) == 0:
+            await channel.send("That deck has zero cards.")
+            return
+        await multisend(channel, "\n".join( (f'{key}: {value}' for key, value in alldecks[deck].items()) ), enclose='```')
 
     flipcoin_short_desc = f"Flips a coin. 50% chance of heads, 50% chance of tails."
     async def flipcoin(self, args, author: discord.User, channel, monkey: Monkey, commandlist, extra):
