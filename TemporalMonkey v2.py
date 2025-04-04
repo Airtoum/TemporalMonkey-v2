@@ -692,6 +692,17 @@ class Commands:
         index = random.choice(list(alldecks[deck].keys()))
         await channel.send(alldecks[deck][index])
 
+    listdecks_short_desc = "Lists all decks. (hmm.)"
+    async def listdecks(self, args, author: discord.User, channel, monkey: Monkey, commandlist, extra):
+        try:
+            with open('saveddecks.monkey', 'rb') as thefile:
+                alldecks = pickle.load(thefile)
+        except FileNotFoundError:
+            alldecks = {}
+        if len(alldecks.keys()) == 0:
+            await channel.send("There are no decks.")
+        await multisend("\n".join(alldecks.keys()), enclose='```')
+
     flipcoin_short_desc = f"Flips a coin. 50% chance of heads, 50% chance of tails."
     async def flipcoin(self, args, author: discord.User, channel, monkey: Monkey, commandlist, extra):
         await channel.send("tails")
@@ -1321,6 +1332,7 @@ async def on_message(message: discord.Message):
         prefix + "reshuffle": commands.reshuffle,
         prefix + "rolldeck": commands.rolldeck,
         prefix + "roll": commands.rolldeck,
+        prefix + "listdecks": commands.listdecks,
         prefix + "flipcoin": commands.flipcoin,
         prefix + "embed_test": commands.embed_test,
         prefix + "wc-start": commands.wacky_codex_create_player,
