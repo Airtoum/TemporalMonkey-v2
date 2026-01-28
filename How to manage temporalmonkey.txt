@@ -36,5 +36,10 @@ To setup pyenv:
 2. [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 3. eval "$(pyenv init -)" >> ~/.bashrc
 
+To host a web server:
+1. sudo python3 -m http.server 80
+2. sudo is necessary for ip addresses below 1024, such as the default 80 for http or 443 for https
+
+
 
 
