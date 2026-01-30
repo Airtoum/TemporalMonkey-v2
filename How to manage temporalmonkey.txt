@@ -39,6 +39,7 @@ To setup pyenv:
 To host a web server:
 1. sudo python3 -m http.server 80
 2. sudo is necessary for ip addresses below 1024, such as the default 80 for http or 443 for https
+3. sudo fastapi run server.py --port 80
 
 To check available packages:
 1. pip list
