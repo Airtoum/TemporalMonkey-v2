@@ -40,6 +40,8 @@ To host a web server:
 1. sudo python3 -m http.server 80
 2. sudo is necessary for ip addresses below 1024, such as the default 80 for http or 443 for https
 
-
+To check available packages:
+1. pip list
+2. sudo pip list (they are different)
 
 
